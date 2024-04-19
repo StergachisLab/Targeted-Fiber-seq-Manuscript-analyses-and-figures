@@ -29,7 +29,7 @@ def make_cov_array(bampath, contig, start, end, pad):
 	return left_pad_cov, coverage, right_pad_cov
 
 
-def make_cov_array_noindel(bampath, contig, start, end, pad):
+def make_cov_array_noindel(bampath, contig, start, end, pad=0):
 	bamfile=pysam.AlignmentFile(bampath, "rb")
 
 	padded_start=start-pad
@@ -48,9 +48,16 @@ def make_cov_array_noindel(bampath, contig, start, end, pad):
 						min(read.reference_end - padded_start, padded_end - padded_start))
 		coverage[coverage_slice] += 1
 
-	left_pad_cov=coverage[:pad]
-	cov=coverage[pad:-pad]
-	right_pad_cov=coverage[-pad:]
+	if pad > 0:
+
+		left_pad_cov=coverage[:pad]
+		cov=coverage[pad:-pad]
+		right_pad_cov=coverage[-pad:]
+
+	else:
+		left_pad_cov=[]
+		cov=coverage
+		right_pad_cov=[]
 
 	return left_pad_cov, cov, right_pad_cov
 

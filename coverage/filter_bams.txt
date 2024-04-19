@@ -1,0 +1,24 @@
+# Filtering reads
+
+source /gscratch/stergachislab/bohaczuk/tools/Miniconda3/etc/profile.d/conda.sh
+conda activate fiberseq-smk
+
+
+samples="PS00442 PS00443 PS00444"
+
+for sample in $samples;do
+	dir=/mmfs1/gscratch/stergachislab/bohaczuk/data/ft-m6a/${sample}
+	mkdir ${dir}/read_filtering
+	samtools view -b -F 2308 -q 10  ${dir}/${sample}.hg38.75nuc.bam > ${dir}/read_filtering/${sample}.primfil.bam
+
+#	samtools index ${sample}.primfil.bam
+	
+
+
+	sh filter_m6a_perc.sh \
+		${dir}/read_filtering/${sample}.primfil.bam 0.02 0.4 ${dir}/read_filtering/${sample}.hg38.75nuc.m6afil.bam
+
+	
+	samtools index ${dir}/read_filtering/${sample}.hg38.75nuc.m6afil.bam
+
+done

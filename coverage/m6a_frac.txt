@@ -1,0 +1,1 @@
+#ct	st	en	read_name	total_AT_bp	total_m6a_bp

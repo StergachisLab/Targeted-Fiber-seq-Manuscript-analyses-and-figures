@@ -1,0 +1,25 @@
+DM1 peak stats
+normal FIRE count 85
+normal_other_count 6
+large RE FIRE count 13
+large RE other count 10
+small RE FIRE count 26
+small RE other count 4
+large RE vs normal (0.09176470588235294, 6.430125270406429e-05)
+small RE vs normal (0.4588235294117647, 0.2622476934713696)
+normal FIRE count 71
+normal_other_count 21
+large RE FIRE count 6
+large RE other count 20
+small RE FIRE count 26
+small RE other count 8
+large RE vs normal (0.08873239436619719, 7.439290256788975e-07)
+small RE vs normal (0.9612676056338029, 1.0)
+normal FIRE count 85
+normal_other_count 7
+large RE FIRE count 3
+large RE other count 24
+small RE FIRE count 25
+small RE other count 8
+large RE vs normal (0.010294117647058823, 7.079679266619121e-16)
+small RE vs normal (0.25735294117647056, 0.024246500605985984)

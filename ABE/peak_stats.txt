@@ -1,0 +1,37 @@
+ABE peak stats
+peak:5247698
+unedited FIRE count 9
+unedited other count 49
+edited FIRE count 8
+edited other count 28
+(1.5555555555555556, 0.42285747948005126)
+peak:5249346
+unedited FIRE count 5
+unedited other count 71
+edited FIRE count 9
+edited other count 31
+(4.122580645161291, 0.01730613495067557)
+peak:5249947
+unedited FIRE count 3
+unedited other count 77
+edited FIRE count 11
+edited other count 33
+(8.555555555555555, 0.0006444590175593415)
+peak:5252404
+unedited FIRE count 7
+unedited other count 64
+edited FIRE count 11
+edited other count 28
+(3.5918367346938775, 0.016777266333579555)
+peak:5254157
+unedited FIRE count 12
+unedited other count 60
+edited FIRE count 7
+edited other count 36
+(0.9722222222222222, 1.0)
+peak:5254536
+unedited FIRE count 11
+unedited other count 65
+edited FIRE count 11
+edited other count 32
+(2.03125, 0.147344082818347)

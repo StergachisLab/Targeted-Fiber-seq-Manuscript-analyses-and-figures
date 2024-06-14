@@ -5,7 +5,7 @@ unedited="/mmfs1/gscratch/stergachislab/bohaczuk/scripts/fiberseq-fire-0.0.4/FIR
 
 
 chr=chr11
-peaks=()
+peaks=(5247698 5249346 5249947 5252404 5254157 5254536)
 
 
 
@@ -23,19 +23,20 @@ conda activate ft-pipeline
 
 
 
-uned_FIRE_count=$(samtools view -u $unedited $chr:$peak| ft fire --extract -  | awk -v peak="$peak" '$2 < peak && $3 > peak' | awk '$5<11'| wc -l)
-uned_other_count=$(samtools view -u $unedited $chr:$peak| ft fire --extract -  | awk -v peak="$peak" '$2 < peak && $3 > peak' | awk '$5>11'| wc -l)
+unedited_FIRE_count=$(samtools view -u $unedited $chr:$peak| ft fire --extract -  | awk -v peak="$peak" '$2 < peak && $3 > peak' | awk '$5<11'| wc -l)
+unedited_other_count=$(samtools view -u $unedited $chr:$peak| ft fire --extract -  | awk -v peak="$peak" '$2 < peak && $3 > peak' | awk '$5>11'| wc -l)
 
 
 edited_FIRE_count=$(samtools view -u $edited $chr:$peak| ft fire --extract -  | awk -v peak="$peak" '$2 < peak && $3 > peak' | awk '$5<11'| wc -l)
-edited_RE_other_count=$(samtools view -u $edited $chr:$peak| ft fire --extract -  | awk -v peak="$peak" '$2 < peak && $3 > peak' | awk '$5>11'| wc -l)
+edited_other_count=$(samtools view -u $edited $chr:$peak| ft fire --extract -  | awk -v peak="$peak" '$2 < peak && $3 > peak' | awk '$5>11'| wc -l)
 
+echo peak:$peak >> peak_stats.txt
 
-echo "unedited FIRE count $uned_FIRE_count" >> peak_stats.txt
-echo "unedited other count $uned_other_count" >> peak_stats.txt
+echo "unedited FIRE count $unedited_FIRE_count" >> peak_stats.txt
+echo "unedited other count $unedited_other_count" >> peak_stats.txt
 
-echo "edited FIRE count $edited_RE_FIRE_count" >>peak_stats.txt
-echo "edited other count $edited_RE_other_count" >>peak_stats.txt
+echo "edited FIRE count $edited_FIRE_count" >>peak_stats.txt
+echo "edited other count $edited_other_count" >>peak_stats.txt
 
 
 

@@ -33,6 +33,18 @@ large_RE_other_count=$(samtools view -u $DM1_large_RE $chr:$peak| ft fire --extr
 small_RE_FIRE_count=$(samtools view -u $DM1_small_RE $chr:$peak| ft fire --extract -  | awk -v peak="$peak" '$2 < peak && $3 > peak' | awk '$5<11'| wc -l)
 small_RE_other_count=$(samtools view -u $DM1_small_RE $chr:$peak| ft fire --extract -  | awk -v peak="$peak" '$2 < peak && $3 > peak' | awk '$5>11'| wc -l)
 
+small_50less_FIRE_count=$(samtools view -u $DM1_small_RE $chr:$peak| ft fire --extract -  \
+	| grep -f GM06076_50andlessCAG.txt | awk -v peak="$peak" '$2 < peak && $3 > peak'| awk '$5<11'| wc -l)
+small_50less_other_count=$(samtools view -u $DM1_small_RE $chr:$peak| ft fire --extract -  \
+	| grep -f GM06076_50andlessCAG.txt | awk -v peak="$peak" '$2 < peak && $3 > peak' | awk '$5>11'| wc -l)
+
+
+small_51plus_FIRE_count=$(samtools view -u $DM1_small_RE $chr:$peak| ft fire --extract -  \
+	| grep -f GM06076_51andgreaterCAG.txt | awk -v peak="$peak" '$2 < peak && $3 > peak'| awk '$5<11'| wc -l)
+small_51plus_other_count=$(samtools view -u $DM1_small_RE $chr:$peak| ft fire --extract -  \
+	| grep -f GM06076_51andgreaterCAG.txt | awk -v peak="$peak" '$2 < peak && $3 > peak' | awk '$5>11'| wc -l)
+
+
 
 
 echo "normal FIRE count $norm_FIRE_count" >> peak_stats.txt
@@ -43,6 +55,15 @@ echo "large RE other count $large_RE_other_count" >>peak_stats.txt
 
 echo "small RE FIRE count $small_RE_FIRE_count" >>peak_stats.txt
 echo "small RE other count $small_RE_other_count" >>peak_stats.txt
+
+
+echo "small <50 CAG FIRE count $small_50less_FIRE_count" >>peak_stats.txt
+echo "small <50 CAG other count $small_50less_other_count" >>peak_stats.txt
+
+
+echo "small >51 CAG FIRE count $small_51plus_FIRE_count" >>peak_stats.txt
+echo "small >51 CAG other count $small_51plus_other_count" >>peak_stats.txt
+
 
 
 
@@ -58,5 +79,20 @@ pval=$(python -c "from scipy.stats import fisher_exact; fisher=fisher_exact([[$s
 echo "small RE vs normal $pval" >> peak_stats.txt
 
 
+pval=$(python -c "from scipy.stats import fisher_exact; fisher=fisher_exact([[$small_50less_FIRE_count, $small_50less_other_count], [$norm_FIRE_count, $norm_other_count]]); print(fisher)")
+echo "small <50 CAG vs normal $pval" >> peak_stats.txt
+
+pval=$(python -c "from scipy.stats import fisher_exact; fisher=fisher_exact([[$small_51plus_FIRE_count, $small_51plus_other_count], [$norm_FIRE_count, $norm_other_count]]); print(fisher)")
+echo "small >51 CAG vs normal $pval" >> peak_stats.txt
+
 
 done
+
+
+
+
+cat GM06076_50andlessCAG.txt GM06076_51andgreaterCAG.txt > all_GM06076.txt
+
+
+samtools view -u $DM1_small_RE $chr:$peak| ft fire --extract -  \
+	| grep -vf all_GM06076.txt | awk -v peak="$peak" '$2 < peak && $3 > peak'| awk '$5<11'

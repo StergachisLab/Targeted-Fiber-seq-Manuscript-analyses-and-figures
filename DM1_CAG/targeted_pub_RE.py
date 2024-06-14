@@ -12,7 +12,6 @@ repeat_end=45770267
 folder='/mmfs1/gscratch/stergachislab/bohaczuk/data/ft-m6a/'
 samples=['PS00150', 'PS00151', 'PS00152', 'PS00153', 'PS00442', 'PS00443', 'PS00444']
 labels=['PS00150', 'PS00151', 'PS00152', 'PS00153', 'PS00442', 'PS00443', 'PS00444']
-#labels=['Normal', 'Large_pathogenic', 'Small_pathogenic']
 output_path='/mmfs1/gscratch/stergachislab/bohaczuk/scripts/publication_repositories/Targeted-Fiber-seq/DM1_CAG'
 
 
@@ -150,9 +149,9 @@ print(all_samples_df['spans'])
 all_df_spans = all_samples_df[all_samples_df['spans'] == 'B']
 
 # Categorize reads based on repeat length
-categorize_and_extract(all_df_spans, [0, 34], 'normal')
-categorize_and_extract(all_df_spans, [35, 300], 'small_pathogenic')
-categorize_and_extract(all_df_spans, [301, 100000000000], 'large_pathogenic')
+categorize_and_extract(all_df_spans, [0, 34], '<35')
+categorize_and_extract(all_df_spans, [35, 300], '48-68')
+categorize_and_extract(all_df_spans, [301, 100000000000], '>1000')
 #categorize_and_extract(all_df_spans, [35, 10000000000], 'pathogenic')
 
 
@@ -163,7 +162,7 @@ all_df_spans['label'] = all_df_spans['label'].replace({'PS00150': 'GM04608', 'PS
 # Print statistics for each sample and category to a file
 with open(output_path + "/RE_stats.txt", 'w') as f:
 	for sample in all_df_spans['label'].unique():
-		for category in ['normal', 'small_pathogenic', 'large_pathogenic']:
+		for category in ['<35', '48-68', '>1000']:
 #		for category in ['normal', 'pathogenic']:
 			f.write(sample + ' ' + category + ' ' + str(len(all_df_spans[(all_df_spans['label']==sample) & (all_df_spans['designation']==category)])) + '\n')
 			repeat_numbers=all_df_spans[(all_df_spans['label']==sample) & (all_df_spans['designation']==category)]['repeat num']
@@ -180,36 +179,42 @@ with open(output_path + "/RE_stats.txt", 'w') as f:
 # Remove categories with no data points
 data_filtered = all_df_spans.groupby(['label', 'designation']).filter(lambda x: len(x) > 0)
 
+data_filtered['label'] = all_df_spans['label'].replace({'GM04608':'II,1', 'GM04601':'III,1', 'GM04602':'III,2', 'GM06076':'I,1'})
+data_filtered['label']= pd.Categorical(data_filtered['label'], categories=['I,1', 'II,1', 'III,1', 'III,2'], ordered=True)
+# Plot by category of repeat length
+fig, ax = plt.subplots(figsize=(4.5, 4.25))
 
-# Plot violin plots by category of repeat length
-fig, ax = plt.subplots()
 #sns.violinplot(data=data_filtered, x='label', y='repeat num', hue="designation", split=False, showmeans=False, palette='Set2', showmedians=True, edgecolor='black', linewidth=1, cut=0, alpha=0.2, scale='width')
-sns.swarmplot( data=data_filtered, x='label', y='repeat num', hue="designation", size=2)
-plt.ylabel("CAG Repeat Number", fontsize=16)
+#sns.swarmplot( data=data_filtered, x='label', y='repeat num', hue="designation", size=2) # for coloring by repeat size
+sns.swarmplot( data=data_filtered, x='label', y='repeat num', size=5, color='black')
+# plot a red dashed line at 35 
+plt.axhline(y=35, color='r', linestyle='--')
+plt.ylabel("CTG Repeat Count", fontsize=16)
 plt.yticks(fontsize=16)
 
 #Make y axis log scale
 plt.yscale('log')
-# set xtick labels
-#plt.xticks([0,1,2], ['Normal\n(all samples)', 'Pathogenic\n(mother/daughters)', 'Pathogenic\n(grandfather)'])
-# decrease x tick label font size
 plt.xticks(fontsize=16)
-# rotate x tick labels
-plt.xticks(rotation=90)
-#Remove x axis label
+#plt.xticks(rotation=90)
 plt.xlabel('')
-#plt.xticks([0,1], ['Normal', 'Pathogenic'])
-plt.savefig(output_path + "/RE_violin_sample.pdf", bbox_inches='tight')
-plt.savefig(output_path + "/RE_violin_sample.png", bbox_inches='tight')
+# remove legend
+plt.legend([],[], frameon=False)
+plt.savefig(output_path + "/RE_swarm_sample.pdf", bbox_inches='tight')
+plt.savefig(output_path + "/RE_swarm_sample.png", bbox_inches='tight')
 
 
 # Plot violin plots by category of repeat length
-fig, ax = plt.subplots()
-sns.violinplot(data=all_df_spans, x='designation', y='repeat num', showmeans=False, palette='Set2', showmedians=True, edgecolor='black', linewidth=1, cut=0, alpha=0.2, scale='width')
-sns.swarmplot(data=all_df_spans, x='designation', y='repeat num', color='black', size=2)
-plt.ylabel("CAG Repeat Number", fontsize=16)
+
+colors=['#0C0C78','#00DF0C', '#FF45B3']
+fig, ax = plt.subplots(figsize=(4.5, 4.25))
+all_df_spans['designation']= pd.Categorical(all_df_spans['designation'], categories=['<35', '48-68', '>1000'], ordered=True)
+sns.violinplot(data=all_df_spans, x='designation', y='repeat num', showmeans=False, palette=colors, showmedians=True, edgecolor='black', linewidth=1, cut=0, alpha=0.2, scale='width')
+sns.swarmplot(data=all_df_spans, x='designation', y='repeat num', color='black', size=3)
+plt.axhline(y=35, color='r', linestyle='--')
+plt.ylabel("CTG Repeat Count", fontsize=16)
 plt.xlabel('')
 plt.yticks(fontsize=16)
+plt.xticks(fontsize=16)
 
 #Make y axis log scale
 plt.yscale('log')
@@ -217,5 +222,37 @@ plt.savefig(output_path + "/RE_violin_category.pdf", bbox_inches='tight')
 plt.savefig(output_path + "/RE_violin_category.png", bbox_inches='tight')
 
 
-# Still need to categorize by individual donor, separate pathogenic and non-pathogenic for each donor
+
+
+
+
+# pull out repeat counts for GM06076
+less50_counts=all_df_spans[(all_df_spans['label']=='GM06076') & (all_df_spans['designation']=='small_pathogenic') & (all_df_spans['repeat num'] < 51)]['rname'].values
+plus51_counts=all_df_spans[(all_df_spans['label']=='GM06076') & (all_df_spans['designation']=='small_pathogenic') & (all_df_spans['repeat num'] > 50)]['rname'].values
+all_counts=all_df_spans[(all_df_spans['label']=='GM06076') & (all_df_spans['designation']=='small_pathogenic')]['repeat num'].value_counts
+
+print(all_counts)
+
+with open(output_path + '/GM06076_50andlessCAG.txt', 'w') as f:
+	for i in less50_counts:
+		f.write(i + '\n')
+
+with open(output_path + '/GM06076_51andgreaterCAG.txt', 'w') as f:
+	for i in plus51_counts:
+		f.write(i + '\n')
+
+
+# pull out all spanning reads for large RE
+large_counts=all_df_spans[(all_df_spans['designation']=='large_pathogenic')]['rname'].values
+
+# pull out all spanning reads for normal RE
+normal_counts=all_df_spans[(all_df_spans['designation']=='normal')]['rname'].values
+
+with open(output_path + '/large_pathogenic.txt', 'w') as f:
+	for i in large_counts:
+		f.write(i + '\n')
+
+with open(output_path + '/normal.txt', 'w') as f:
+	for i in normal_counts:
+		f.write(i + '\n')
 

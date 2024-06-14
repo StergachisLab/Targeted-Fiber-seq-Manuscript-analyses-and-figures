@@ -5,21 +5,39 @@ large RE FIRE count 13
 large RE other count 10
 small RE FIRE count 26
 small RE other count 4
+small <50 CAG FIRE count 7
+small <50 CAG other count 0
+small >51 CAG FIRE count 17
+small >51 CAG other count 3
 large RE vs normal (0.09176470588235294, 6.430125270406429e-05)
 small RE vs normal (0.4588235294117647, 0.2622476934713696)
+small <50 CAG vs normal (inf, 1.0)
+small >51 CAG vs normal (0.4, 0.20416871302475836)
 normal FIRE count 71
 normal_other_count 21
 large RE FIRE count 6
 large RE other count 20
 small RE FIRE count 26
 small RE other count 8
+small <50 CAG FIRE count 5
+small <50 CAG other count 3
+small >51 CAG FIRE count 17
+small >51 CAG other count 4
 large RE vs normal (0.08873239436619719, 7.439290256788975e-07)
 small RE vs normal (0.9612676056338029, 1.0)
+small <50 CAG vs normal (0.49295774647887325, 0.39379520917068067)
+small >51 CAG vs normal (1.2570422535211268, 1.0)
 normal FIRE count 85
 normal_other_count 7
 large RE FIRE count 3
 large RE other count 24
 small RE FIRE count 25
 small RE other count 8
+small <50 CAG FIRE count 4
+small <50 CAG other count 4
+small >51 CAG FIRE count 17
+small >51 CAG other count 3
 large RE vs normal (0.010294117647058823, 7.079679266619121e-16)
 small RE vs normal (0.25735294117647056, 0.024246500605985984)
+small <50 CAG vs normal (0.08235294117647059, 0.004621697065438825)
+small >51 CAG vs normal (0.4666666666666667, 0.3804914713277384)

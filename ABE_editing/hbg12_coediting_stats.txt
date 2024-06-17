@@ -1,0 +1,8 @@
+HBG1 percent edited: 0.3387096774193548
+HBG2 percent edited: 0.32
+HBG1 percent edited among fibers spanning both: 0.3333333333333333
+HBG2 percent edited among fibers spanning both: 0.2753623188405797
+Percent co-edited among fibers spanning both: 0.2463768115942029
+Percent neither edited among fibers spanning both: 0.6231884057971014
+Percent either edited among fibers spanning both: 0.37681159420289856
+Co-edit p value: 3.0271850355899015e-09

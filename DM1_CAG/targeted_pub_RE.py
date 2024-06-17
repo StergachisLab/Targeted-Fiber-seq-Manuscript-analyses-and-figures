@@ -82,10 +82,10 @@ def make_RE_df(bampath, chrom, repeat_start, repeat_end, label="NONE"):
 	all_df.reset_index(drop=True, inplace=True)
 		
 
-	# Get names spanning both, check for unique names
+	# Get names spanning both
 
-	spanning_both=all_df[all_df['spans']=='B']
-	print('number spanning both', len(all_df[all_df['spans']=='B']))
+	#spanning_both=all_df[all_df['spans']=='B']
+	#print('number spanning both', len(all_df[all_df['spans']=='B']))
 
 
 	# Count CAGs
@@ -103,6 +103,10 @@ def make_RE_df(bampath, chrom, repeat_start, repeat_end, label="NONE"):
 		all_df.loc[all_df['rname'] == fiber, 'repeat num'] = CAG_boundaries
 
 
+	# 	As a sanity check, see that the number of CAGs is close to the number of CAGs between the first and last CAG
+	#	and that this number is close to the number of bps between the genomic anchoring positions 
+
+
 		# Count the number of CAGs
 		CAG_count=repeat_seq.count('CAG')
 
@@ -111,8 +115,6 @@ def make_RE_df(bampath, chrom, repeat_start, repeat_end, label="NONE"):
 		print('CAG_seq', repeat_seq[first_CAG:last_CAG+3])
 
 
-	# 	As a sanity check, see that the number of CAGs is close to the number of CAGs between the first and last CAG
-	#	and that this number is close to the number of bps between the genomic anchoring positions 
 		#print('CAG_count', CAG_count, 'CAG_boundaries', CAG_boundaries)
 		#print("repeat_len", (spanning_both[spanning_both['rname']==fiber]['repeat_len'].values[0]-5)/3)
 
@@ -181,7 +183,7 @@ data_filtered = all_df_spans.groupby(['label', 'designation']).filter(lambda x: 
 
 data_filtered['label'] = all_df_spans['label'].replace({'GM04608':'II,1', 'GM04601':'III,1', 'GM04602':'III,2', 'GM06076':'I,1'})
 data_filtered['label']= pd.Categorical(data_filtered['label'], categories=['I,1', 'II,1', 'III,1', 'III,2'], ordered=True)
-# Plot by category of repeat length
+# Plot by generation (corresponding to repeat length)
 fig, ax = plt.subplots(figsize=(4.5, 4.25))
 
 #sns.violinplot(data=data_filtered, x='label', y='repeat num', hue="designation", split=False, showmeans=False, palette='Set2', showmedians=True, edgecolor='black', linewidth=1, cut=0, alpha=0.2, scale='width')
@@ -220,39 +222,3 @@ plt.xticks(fontsize=16)
 plt.yscale('log')
 plt.savefig(output_path + "/RE_violin_category.pdf", bbox_inches='tight')
 plt.savefig(output_path + "/RE_violin_category.png", bbox_inches='tight')
-
-
-
-
-
-
-# pull out repeat counts for GM06076
-less50_counts=all_df_spans[(all_df_spans['label']=='GM06076') & (all_df_spans['designation']=='small_pathogenic') & (all_df_spans['repeat num'] < 51)]['rname'].values
-plus51_counts=all_df_spans[(all_df_spans['label']=='GM06076') & (all_df_spans['designation']=='small_pathogenic') & (all_df_spans['repeat num'] > 50)]['rname'].values
-all_counts=all_df_spans[(all_df_spans['label']=='GM06076') & (all_df_spans['designation']=='small_pathogenic')]['repeat num'].value_counts
-
-print(all_counts)
-
-with open(output_path + '/GM06076_50andlessCAG.txt', 'w') as f:
-	for i in less50_counts:
-		f.write(i + '\n')
-
-with open(output_path + '/GM06076_51andgreaterCAG.txt', 'w') as f:
-	for i in plus51_counts:
-		f.write(i + '\n')
-
-
-# pull out all spanning reads for large RE
-large_counts=all_df_spans[(all_df_spans['designation']=='large_pathogenic')]['rname'].values
-
-# pull out all spanning reads for normal RE
-normal_counts=all_df_spans[(all_df_spans['designation']=='normal')]['rname'].values
-
-with open(output_path + '/large_pathogenic.txt', 'w') as f:
-	for i in large_counts:
-		f.write(i + '\n')
-
-with open(output_path + '/normal.txt', 'w') as f:
-	for i in normal_counts:
-		f.write(i + '\n')
-

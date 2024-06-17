@@ -1,0 +1,1 @@
+# For analyses, bams were filtered for m6A/A ratio between 0.02-0.4. Fibers with m6A content outside this ratio were excluded from downstream analyses.

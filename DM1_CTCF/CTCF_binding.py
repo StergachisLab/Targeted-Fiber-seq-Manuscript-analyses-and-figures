@@ -8,6 +8,7 @@ import numpy as np
 import csv
 from scipy.stats import fisher_exact
 
+
 def read_bed_file_for_range(bed_file, target_chrom, target_start, target_end, offset_start=17, offset_end=30):
     """
     Read regions from a BED file, filtering for regions within a specific chromosomal range,

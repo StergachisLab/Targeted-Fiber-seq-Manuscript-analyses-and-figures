@@ -56,7 +56,6 @@ plt.xlabel('Fraction actuation difference')
 # set x axis limits
 plt.xlim(-0.65, 0.65)
 plt.ylabel('-log10(p-value)')
-plt.legend()
 
 # Save the plot
 plt.rcParams['pdf.fonttype'] = 42
@@ -73,10 +72,9 @@ plt.xlabel('Fraction actuation difference')
 # set x axis limits
 plt.xlim(-0.65, 0.65)
 plt.ylabel('-log10(p-value)')
-plt.legend()
 
 # Save the plot
 plt.rcParams['pdf.fonttype'] = 42
-plt.savefig('TSS_volcano_plot_BHpval.png')
-plt.savefig('TSS_volcano_plot_BHpval.pdf', format="pdf", bbox_inches='tight')
+plt.savefig('ABE_volcano_plot_BHpval.png')
+plt.savefig('ABE_volcano_plot_BHpval.pdf', format="pdf", bbox_inches='tight')
 plt.show()

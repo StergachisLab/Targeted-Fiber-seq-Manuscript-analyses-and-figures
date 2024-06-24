@@ -1,0 +1,4 @@
+sample	bam
+edited_0.15_55nuc_fire.4 /gscratch/stergachislab/bohaczuk/analysis/hbg_lieber/ft_reruns/hg38/split_by_edit/hg38_edited2x_55_m6afil_padded.bam
+unedited_0.15_55nuc_fire.4 /gscratch/stergachislab/bohaczuk/analysis/hbg_lieber/ft_reruns/hg38/split_by_edit/hg38_unedited2x_55_m6afil_padded.bam
+all2x_0.15_55nuc_fire.4	/mmfs1/gscratch/stergachislab/bohaczuk/analysis/hbg_lieber/ft_reruns/hg38/hg38_all2x_55_m6afil.bam

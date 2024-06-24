@@ -1,0 +1,33 @@
+ref: /mmfs1/gscratch/stergachislab/assemblies/hg38.analysisSet.fa
+ref_name: hg38
+n_chunks: 2
+ # split bam file across x chunks
+max_t: 4 # use X threads per chunk
+manifest: config/targeted_paper_PS00118.tbl # table with samples to process
+
+keep_chromosomes: "chr4|chr11|chr19" # only keep chrs matching this regex.
+
+## Force a read coverage instead of calulating it genome wide from the bam file.
+## This can be useful if only a subset of the genome has reads.
+#force_coverage: 10
+min_coverage: 15
+coverage_within_n_sd: 100
+
+
+## regions to not use when identifying null regions that should not have RE, below are the defaults auto used for hg38.
+#excludes:
+#- workflow/annotations/hg38.blacklist.ENCFF356LFX.bed.gz
+#- workflow/annotations/hg38.gap.bed.gz
+#- workflow/annotations/SDs.merged.hg38.bed.gz
+
+## you can optionally specify a model that is not the default.
+# model: models/my-custom-model.dat
+
+##
+## only used if training a new model
+##
+# train: True
+# dhs: workflow/annotations/GM12878_DHS.bed.gz # regions of suspected regulatory elements
+
+# Filter peaks on a % accesible threshold instead of FDR. Removes FDR filtering.
+min_per_acc_peak: 0.15 # enforce 15% of reads in peak are accessible

@@ -45,16 +45,24 @@ data['log_corrected_pvals_large'] = -np.log10(corrected_pvals_large)
 data['log_corrected_pvals_small'] = -np.log10(corrected_pvals_small)
 
 
+data.loc[data["start"] == 45769240, 'label_large'] = 'SIX5 promotor'
+data.loc[data["start"] == 45770259, 'label_large'] = "CTCF peak"
+data.loc[data["start"] == 45770597, 'label_large'] = "putative SIX5 enhancer"
+data.loc[data["start"] == 45810188, 'label_large'] = 'RSPA6A intron 2'
+
+data.loc[data["start"] == 45707334, 'label_small'] = "QPCTL/FBXO46 intergenic"
+
+
 # save the data to a new file
 data.to_csv("normal_peaks_widepeak_stats_with_pvals.txt", sep="\t", index=False)
 
 # save a bed file with significant peaks from the large expansion
 data_large = data[data['corrected_pvals_large'] < 0.05]
-data_large.to_csv("largeRE_sig_peaks.bed", sep="\t", columns=['chrom', 'start', 'end'], header=False, index=False)
+data_large.to_csv("largeRE_sig_peaks.bed", sep="\t", columns=['chr', 'start', 'end'], header=False, index=False)
 
 # save a bed file with significant peaks from the small expansion
 data_small = data[data['corrected_pvals_small'] < 0.05]
-data_small.to_csv("smallRE_sig_peaks.bed", sep="\t", columns=['chrom', 'start', 'end'], header=False, index=False)
+data_small.to_csv("smallRE_sig_peaks.bed", sep="\t", columns=['chr', 'start', 'end'], header=False, index=False)
 
 
 
@@ -102,8 +110,8 @@ for i in range(len(data)):
 
 # Save the plot
 plt.rcParams['pdf.fonttype'] = 42
-plt.savefig('volcano_plot.png')
-plt.savefig('volcano_plot.pdf', format="pdf", bbox_inches='tight')
+plt.savefig('volcano_plot_unadj_pval.png')
+plt.savefig('volcano_plot_unadj_pval.pdf', format="pdf", bbox_inches='tight')
 plt.show()
 
 

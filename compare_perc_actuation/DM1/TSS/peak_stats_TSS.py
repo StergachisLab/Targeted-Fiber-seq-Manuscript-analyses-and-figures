@@ -41,6 +41,8 @@ data['corrected_pvals_small'] = corrected_pvals_small
 data['log_corrected_pvals_large'] = -np.log10(corrected_pvals_large)
 data['log_corrected_pvals_small'] = -np.log10(corrected_pvals_small)
 
+# label the SIX5 promotor
+data.loc[data["pos"] == 45769252, 'label_large'] = 'SIX5 promotor'
 
 # save the data to a new file
 data.to_csv("TSSs_stats_with_pvals.txt", sep="\t", index=False)
@@ -90,13 +92,11 @@ plt.ylabel('-log10(p-value)')
 plt.legend()
 
 # Add labels to the points
-#for i in range(len(data)):
-#	if not pd.isnull(data['label_large'][i]):
-#		ax.text(data['fraction_actuation_diff_large'][i], data['log_pval_large'][i], data['label_large'][i], fontsize=8)
+for i in range(len(data)):
+	if not pd.isnull(data['label_large'][i]):
+		ax.text(data['fraction_actuation_diff_large'][i], data['log_pval_large'][i], data['label_large'][i], fontsize=8)
 
-#for i in range(len(data)):
-#	if not pd.isnull(data['label_small'][i]):
-#		ax.text(data['fraction_actuation_diff_small'][i], data['log_pval_small'][i], data['label_small'][i], fontsize=8)
+
 
 # Save the plot
 plt.rcParams['pdf.fonttype'] = 42
@@ -116,14 +116,12 @@ plt.xlim(-0.65, 0.65)
 plt.ylabel('-log10(p-value)')
 plt.legend()
 
-'''
+
 # Add labels to the points
 for i in range(len(data)):
 	if not pd.isnull(data['label_large'][i]):
 		ax.text(data['fraction_actuation_diff_large'][i], data['log_corrected_pvals_large'][i], data['label_large'][i], fontsize=8)	
-	if not pd.isnull(data['label_small'][i]):
-		ax.text(data['fraction_actuation_diff_small'][i], data['log_corrected_pvals_small'][i], data['label_small'][i], fontsize=8)
-		'''
+
 
 # Save the plot
 plt.rcParams['pdf.fonttype'] = 42

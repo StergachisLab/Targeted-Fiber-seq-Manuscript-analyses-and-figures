@@ -84,7 +84,7 @@ def make_RE_df(bampath, chrom, repeat_start, repeat_end, label="NONE"):
 
 	# Get names spanning both
 
-	#spanning_both=all_df[all_df['spans']=='B']
+	spanning_both=all_df[all_df['spans']=='B']
 	#print('number spanning both', len(all_df[all_df['spans']=='B']))
 
 
@@ -190,6 +190,7 @@ fig, ax = plt.subplots(figsize=(4.5, 4.25))
 #sns.swarmplot( data=data_filtered, x='label', y='repeat num', hue="designation", size=2) # for coloring by repeat size
 sns.swarmplot( data=data_filtered, x='label', y='repeat num', size=5, color='black')
 # plot a red dashed line at 35 
+
 plt.axhline(y=35, color='r', linestyle='--')
 plt.ylabel("CTG Repeat Count", fontsize=16)
 plt.yticks(fontsize=16)
@@ -201,6 +202,7 @@ plt.xticks(fontsize=16)
 plt.xlabel('')
 # remove legend
 plt.legend([],[], frameon=False)
+plt.rcParams['pdf.fonttype'] = 42
 plt.savefig(output_path + "/RE_swarm_sample.pdf", bbox_inches='tight')
 plt.savefig(output_path + "/RE_swarm_sample.png", bbox_inches='tight')
 
@@ -220,5 +222,6 @@ plt.xticks(fontsize=16)
 
 #Make y axis log scale
 plt.yscale('log')
+plt.rcParams['pdf.fonttype'] = 42
 plt.savefig(output_path + "/RE_violin_category.pdf", bbox_inches='tight')
 plt.savefig(output_path + "/RE_violin_category.png", bbox_inches='tight')

@@ -1,0 +1,23 @@
+# Make different tracks for pvalue thresholds 0.1, 0.01, and 0.001
+
+# For bigwig conversion
+sizes='/mmfs1/gscratch/stergachislab/assemblies/hg38.analysisSet.chrom.sizes'
+
+
+cut -f 1-3,12 haptagged_no_polymorph.tsv | tail -n +2 | awk '{print $1 "\t" $2 "\t" $3 "\t" $4*100}' > cpg_diffs_all_pval.bed
+
+awk -F '\t' '$9 < 0.01' haptagged_no_polymorph.tsv | cut -f 1-3,12| awk '{print $1 "\t" $2 "\t" $3 "\t" $4*100}'>  cpg_diffs_p0.01.bed
+
+awk -F '\t' '$9 < 0.001' haptagged_no_polymorph.tsv | cut -f 1-3,12| awk '{print $1 "\t" $2 "\t" $3 "\t" $4*100}'>  cpg_diffs_p0.001.bed
+
+awk -F '\t' '$9 < 0.0001' haptagged_no_polymorph.tsv | cut -f 1-3,12| awk '{print $1 "\t" $2 "\t" $3 "\t" $4*100}'>  cpg_diffs_p0.0001.bed
+
+
+
+/mmfs1/gscratch/stergachislab/bin/bedGraphToBigWig cpg_diffs_all_pval.bed $sizes cpg_diffs_all_pval.bw
+
+/mmfs1/gscratch/stergachislab/bin/bedGraphToBigWig cpg_diffs_p0.01.bed $sizes cpg_diffs_p0.01.bw
+
+/mmfs1/gscratch/stergachislab/bin/bedGraphToBigWig cpg_diffs_p0.001.bed $sizes cpg_diffs_p0.001.bw
+
+/mmfs1/gscratch/stergachislab/bin/bedGraphToBigWig cpg_diffs_p0.0001.bed $sizes cpg_diffs_p0.0001.bw

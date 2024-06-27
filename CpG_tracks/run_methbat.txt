@@ -1,0 +1,11 @@
+# Get all CpGs, then limit to the region of interest, chr11:5,241,899-5,260,650
+cut -f 1-3 haptagged_cpg_track.combined.bed > cpg_profile.tsv
+
+printf "chrom\tstart\tend\n" | cat - cpg_profile.tsv > cpg_profile_header && mv cpg_profile_header cpg_profile.tsv
+
+# Run methbat
+/mmfs1/gscratch/stergachislab/bohaczuk/analysis/hbg_lieber/ft_reruns/cpg/methbat/methbat-v0.9.0-x86_64-unknown-linux-gnu/methbat profile \
+	--input-prefix haptagged_cpg_track \
+	--input-regions cpg_profile.tsv \
+	--output-region-profile haptagged.tsv
+

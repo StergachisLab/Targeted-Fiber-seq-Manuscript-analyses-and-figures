@@ -1,0 +1,8 @@
+# Added 2/23/24- filter polymorphisms, since proportions are meaningless. Can omit p=0.1 because we will not use this track.
+
+# For bigwig conversion
+sizes='/mmfs1/gscratch/stergachislab/assemblies/hg38.analysisSet.chrom.sizes'
+
+#cut -f 1-3,12 haptagged.tsv | tail -n +2 | awk '{print $1 "\t" $2 "\t" $3 "\t" $4*100}' | awk  'NR==FNR { patterns[$0]; next } !($2 in patterns)' exclude_polymorphisms.txt - > cpg_diffs_all_pval_no_polymorph.bed
+
+tail -n +2 haptagged.tsv |  awk  'NR==FNR { patterns[$0]; next } !($2 in patterns)' exclude_polymorphisms.txt - > haptagged_no_polymorph.tsv

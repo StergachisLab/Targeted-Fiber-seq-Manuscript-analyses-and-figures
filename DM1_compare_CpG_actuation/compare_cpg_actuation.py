@@ -47,7 +47,7 @@ plt.xlim(-0.65,0.65)
 plt.ylabel('mCpG difference')
 plt.xlabel('Fraction actuation difference')
 
-
+plt.rcParams['pdf.fonttype'] = 42
 plt.savefig('actuation_vs_cpg_large.png')
 plt.savefig('actuation_vs_cpg_large.pdf', format='pdf', bbox_inches='tight')
 plt.show()

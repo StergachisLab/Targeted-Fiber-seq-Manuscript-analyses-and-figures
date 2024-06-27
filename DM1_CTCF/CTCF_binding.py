@@ -182,10 +182,12 @@ def calculate_bound(bed_file, bam_file, target_chrom, target_start, target_end):
 	# Prepare data for the table and CSV output
 	headers = ["Region", "Bound Count", "Unbound Count", "Nucleosome Count", "Uncategorized Count", "Fiber Count", "+ Strand Count", "- Strand Count", "Fraction Bound", "pval"]
 	table_data = [headers]
-	csv_data = [headers]
+	csv_data = [headers[:-1]]
 
 
 	perc_bound={}
+	perc_unbound={}
+	perc_nucleosomes={}
 	for region, counts in binding_analysis.items():
 		row = [
 			region,
@@ -199,22 +201,48 @@ def calculate_bound(bed_file, bam_file, target_chrom, target_start, target_end):
 		]
 		total_categorized_count=counts['bound']+counts['unbound']+counts['nucleosomes']
 		perc_bound[region]=counts['bound']/total_categorized_count
+		perc_unbound[region]=counts['unbound']/total_categorized_count
+		perc_nucleosomes[region]=counts['nucleosomes']/total_categorized_count
 		row.append(perc_bound[region])
-          
 	
 
 		table_data.append(row)  # Append the row to the table data
 		csv_data.append(row)    # Append the row to the CSV data
 
-	return perc_bound, binding_analysis, csv_data
+	return perc_bound, perc_unbound, perc_nucleosomes, binding_analysis, csv_data
 
      
+norm_perc_bound, norm_perc_unbound, norm_perc_nucleosomes, norm_binding, norm_csv=calculate_bound(bed_file, norm_bam_file, target_chrom, target_start, target_end)
+re_perc_bound, re_perc_unbound, re_perc_nucleosomes, re_binding, re_csv=calculate_bound(bed_file, re_bam_file, target_chrom, target_start, target_end)
+shortre_perc_bound, shortre_perc_unbound, shortre_perc_nucleosomes, shortre_binding, shortre_csv=calculate_bound(bed_file, shortre_bam_file, target_chrom, target_start, target_end)
 
-norm_perc_bound, norm_binding, norm_csv=calculate_bound(bed_file, norm_bam_file, target_chrom, target_start, target_end)
-re_perc_bound, re_binding, re_csv=calculate_bound(bed_file, re_bam_file, target_chrom, target_start, target_end)
-shortre_perc_bound, shortre_binding, shortre_csv=calculate_bound(bed_file, shortre_bam_file, target_chrom, target_start, target_end)
 
 
+# Fisher exact test for each region and print to file
+with open("norm_vs_longRE_pvals.txt", "w") as f:
+	# Fisher for each region vs long expansion
+	for region in norm_perc_bound.keys():
+		# Get the counts for the region
+		norm_bound=norm_binding[region]['bound']
+		norm_unbound=norm_binding[region]['unbound'] + norm_binding[region]['nucleosomes']
+		re_bound=re_binding[region]['bound']
+		re_unbound=re_binding[region]['unbound'] + re_binding[region]['nucleosomes']
+		# Perform the Fisher exact test
+		oddsratio, pvalue = fisher_exact([[norm_bound, norm_unbound], [re_bound, re_unbound]])
+		f.write(f"{region} p-value: {pvalue}\n")
+
+# Fisher for each region vs short expansion
+with open("norm_vs_shortRE_pvals.txt", "w") as f:
+	# Fisher for each region vs short expansion
+	for region in norm_perc_bound.keys():
+		# Get the counts for the region
+		norm_bound=norm_binding[region]['bound']
+		norm_unbound=norm_binding[region]['unbound'] + norm_binding[region]['nucleosomes']
+		shortre_bound=shortre_binding[region]['bound']
+		shortre_unbound=shortre_binding[region]['unbound'] + shortre_binding[region]['nucleosomes']
+		# Perform the Fisher exact test
+		oddsratio, pvalue = fisher_exact([[norm_bound, norm_unbound], [shortre_bound, shortre_unbound]])
+		f.write(f"{region} p-value: {pvalue}\n")
 
 # Save the table data to a CSV file
 csv_file_path = 'CTCF_norm_all.csv'  
@@ -250,7 +278,18 @@ for ROI in ROIs:
 	plt.savefig(ROI.replace(":","_") +'_CTCF_binding_v2.pdf', format='pdf', bbox_inches='tight')
 	plt.show()
 
+	# plot as a stacked bar plot with normal and pathogenic side by side
+	fig=plt.figure(figsize=(4,8))
+	vals_bound=[norm_perc_bound[ROI], re_perc_bound[ROI]]
+	vals_unbound=[norm_perc_unbound[ROI], re_perc_unbound[ROI]]
+	vals_nucleosomes=[norm_perc_nucleosomes[ROI], re_perc_nucleosomes[ROI]]
+	plt.bar(x=['Normal', 'Pathogenic'], height=vals_bound, color='#39B54A', label='Bound')
+	plt.bar(x=['Normal', 'Pathogenic'], height=vals_unbound, bottom=vals_bound, color='#2B3990', label='Unbound')
+	plt.bar(x=['Normal', 'Pathogenic'], height=vals_nucleosomes, bottom=[sum(x) for x in zip(vals_bound, vals_unbound)], color='#AAAAA9', label='Nucleosomes')
+    # add a legend 
+	plt.legend(fontsize=16)
 
+	plt.savefig(ROI.replace(":","_") +'_CTCF_binding_stacked_v2.pdf', format='pdf', bbox_inches='tight')
 
 
 # Fisher exact test for each region and print to file

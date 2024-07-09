@@ -89,20 +89,35 @@ data.loc[data["start"] == 45707334, 'label_small'] = "QPCTL/FBXO46 intergenic"
 
 
 # Plot volcano plot 
+plt.rcParams['pdf.fonttype'] = 42
 fig, ax = plt.subplots()
 ax.scatter(data['fraction_actuation_diff_large'], data['log_pval_large'], color='#EC2027', label='Gen II/III Expanded')
 ax.scatter(data['fraction_actuation_diff_small'], data['log_pval_small'], color='#006838', label='Gen I Expanded')
 plt.axhline(y=-np.log10(0.05), color='black', linestyle='--')
+plt.axvline(x=0, color='black', linestyle='--')
+ax.text(-0.6, -np.log10(0.05)+0.1, 'Nominal significance (p=0.05)', fontsize=8)
 plt.xlabel('Fraction actuation difference')
 # set x axis limits
 plt.xlim(-0.65, 0.65)
 plt.ylabel('-log10(p-value)')
 plt.legend()
 
+# add a line for Benjamini-Hochberg corrected p-value threshold
+largest_sig_index = len([x for x in data['corrected_pvals_large'] if x < 0.05])
+print(largest_sig_index)
+print(-np.log10(0.05*(largest_sig_index+1)/len(data)))
+pseudo_threshold=-np.log10(0.05*(largest_sig_index+1)/len(data))
+plt.axhline(y=pseudo_threshold, color='red', linestyle='--')
+ax.text(-0.6, pseudo_threshold + 0.1, 'FDR-adjusted significance Gen II/III', fontsize=8, color='red')
+
+
 # Add labels to the points
 for i in range(len(data)):
 	if not pd.isnull(data['label_large'][i]):
 		ax.text(data['fraction_actuation_diff_large'][i], data['log_pval_large'][i], data['label_large'][i], fontsize=8)
+	if not pd.isnull(data['label_small'][i]):
+		ax.text(data['fraction_actuation_diff_small'][i], data['log_pval_small'][i], data['label_small'][i], fontsize=8)
+
 
 #for i in range(len(data)):
 #	if not pd.isnull(data['label_small'][i]):

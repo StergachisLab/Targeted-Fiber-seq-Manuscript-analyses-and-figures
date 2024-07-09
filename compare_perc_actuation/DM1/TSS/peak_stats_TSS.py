@@ -80,16 +80,28 @@ data_small.to_csv("smallRE_TSS_sig_peaks.bed", sep="\t", columns=['chr', 'pos', 
 
 
 
-# Plot volcano plot 
+# Plot volcano plot
+plt.rcParams['pdf.fonttype'] = 42
 fig, ax = plt.subplots()
 ax.scatter(data['fraction_actuation_diff_large'], data['log_pval_large'], color='#EC2027', label='Gen II/III Expanded')
 ax.scatter(data['fraction_actuation_diff_small'], data['log_pval_small'], color='#006838', label='Gen I Expanded')
 plt.axhline(y=-np.log10(0.05), color='black', linestyle='--')
+ax.text(-0.6, -np.log10(0.05)+0.1, 'Nominal significance (p=0.05)', fontsize=8)
 plt.xlabel('Fraction actuation difference')
 # set x axis limits
 plt.xlim(-0.65, 0.65)
 plt.ylabel('-log10(p-value)')
 plt.legend()
+
+# add a line for Benjamini-Hochberg corrected p-value threshold
+largest_sig_index = len([x for x in data['corrected_pvals_large'] if x < 0.05])
+print(largest_sig_index)
+print(-np.log10(0.05*(largest_sig_index+1)/len(data)))
+print(-np.log10(.00909))
+pseudo_threshold=-np.log10(0.05*(largest_sig_index+1)/len(data))
+plt.axhline(y=pseudo_threshold, color='red', linestyle='--')
+ax.text(-0.6, pseudo_threshold + 0.1, 'FDR-adjusted significance Gen II/III', fontsize=8, color='red')
+
 
 # Add labels to the points
 for i in range(len(data)):
@@ -99,7 +111,7 @@ for i in range(len(data)):
 
 
 # Save the plot
-plt.rcParams['pdf.fonttype'] = 42
+
 plt.savefig('TSS_volcano_plot_unadj_pval.png')
 plt.savefig('TSS_volcano_plot_unadj_pval.pdf', format="pdf", bbox_inches='tight')
 plt.show()

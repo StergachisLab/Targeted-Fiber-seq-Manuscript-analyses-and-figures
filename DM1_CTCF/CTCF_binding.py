@@ -265,31 +265,32 @@ with open(csv_file_path, 'w', newline='') as file:
 # plot regions as a bar plot sie by side
 plt.rcParams['pdf.fonttype'] = 42 
 ROIs=norm_perc_bound.keys()
+labels=['Normal\n(All)', 'Expanded\n(Gen II/III)', 'Expanded\n(Gen I)']
 for ROI in ROIs:
 	fig=plt.figure(figsize=(4,8))
-	vals=[norm_perc_bound[ROI], re_perc_bound[ROI]]
-	plt.bar(x=['Normal', 'Pathogenic'], height=vals, color=['#0C0C78', '#FF45B3'])
+	vals=[norm_perc_bound[ROI], re_perc_bound[ROI], shortre_perc_bound[ROI]]
+	plt.bar(x=labels, height=vals, color=['#0C0C78', '#FF45B3'])
 	plt.ylim([0,0.7])
 	plt.xticks(fontsize=16)
 	plt.yticks(fontsize=16)
 	plt.ylabel("Fraction bound", fontsize=16)
 	plt.title(ROI)
 
-	plt.savefig(ROI.replace(":","_") +'_CTCF_binding_v2.pdf', format='pdf', bbox_inches='tight')
+	plt.savefig(ROI.replace(":","_") +'_CTCF_binding_v3.pdf', format='pdf', bbox_inches='tight')
 	plt.show()
 
 	# plot as a stacked bar plot with normal and pathogenic side by side
 	fig=plt.figure(figsize=(4,8))
-	vals_bound=[norm_perc_bound[ROI], re_perc_bound[ROI]]
-	vals_unbound=[norm_perc_unbound[ROI], re_perc_unbound[ROI]]
-	vals_nucleosomes=[norm_perc_nucleosomes[ROI], re_perc_nucleosomes[ROI]]
-	plt.bar(x=['Normal', 'Pathogenic'], height=vals_bound, color='#39B54A', label='Bound')
-	plt.bar(x=['Normal', 'Pathogenic'], height=vals_unbound, bottom=vals_bound, color='#2B3990', label='Unbound')
-	plt.bar(x=['Normal', 'Pathogenic'], height=vals_nucleosomes, bottom=[sum(x) for x in zip(vals_bound, vals_unbound)], color='#AAAAA9', label='Nucleosomes')
+	vals_bound=[norm_perc_bound[ROI], re_perc_bound[ROI], shortre_perc_bound[ROI]]
+	vals_unbound=[norm_perc_unbound[ROI], re_perc_unbound[ROI], shortre_perc_unbound[ROI]]
+	vals_nucleosomes=[norm_perc_nucleosomes[ROI], re_perc_nucleosomes[ROI], shortre_perc_nucleosomes[ROI]]
+	plt.bar(x=labels, height=vals_bound, color='#7F3F98', label='Bound')
+	plt.bar(x=labels, height=vals_unbound, bottom=vals_bound, color='#27AAE1', label='Unbound')
+	plt.bar(x=labels, height=vals_nucleosomes, bottom=[sum(x) for x in zip(vals_bound, vals_unbound)], color='#ABABAA', label='Nucleosomes')
     # add a legend 
 	plt.legend(fontsize=16)
 
-	plt.savefig(ROI.replace(":","_") +'_CTCF_binding_stacked_v2.pdf', format='pdf', bbox_inches='tight')
+	plt.savefig(ROI.replace(":","_") +'_CTCF_binding_stacked_v3.pdf', format='pdf', bbox_inches='tight')
 
 
 # Fisher exact test for each region and print to file
